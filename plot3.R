@@ -2,13 +2,13 @@
 ## Reading data from the downloaded file
 data <- read.csv("household_power_consumption.txt", sep = ";")
 
-# install necessary packeages
+# install necessary packages
 install.packages("dplyr")
 library(dplyr)
 install.packages("lubridate")
 library(lubridate)
 
-## subset 2007-02-01 and 2007-02-02 dates and cleanup data.table for analysis
+## subset 2007-02-01 and 2007-02-02 dates and cleanup data table for analysis
 newdata <- tbl_df(data)
 data_feb <- filter(newdata, dmy(Date) == ymd("2007-02-01") | dmy(Date) == ymd("2007-02-02"))
 a <- mutate(data_feb, t = parse_date_time(paste(data_feb$Date, data_feb$Time),"dmY hms"))
