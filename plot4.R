@@ -1,0 +1,48 @@
+
+## Reading data from the downloaded file
+data <- read.csv("household_power_consumption.txt", sep = ";")
+
+# install necessary packeages
+install.packages("dplyr")
+library(dplyr)
+install.packages("lubridate")
+library(lubridate)
+
+## subset 2007-02-01 and 2007-02-02 dates
+newdata <- tbl_df(data)
+data_feb <- filter(newdata, dmy(Date) == ymd("2007-02-01") | dmy(Date) == ymd("2007-02-02"))
+
+
+## create a plot and save it to plot4.png
+png(filename = "plot4.png")
+
+# create a room for four plots in one png.
+par(mfrow = c(2, 2))
+
+#plot1: left top
+a <- mutate(data_feb, t = parse_date_time(paste(data_feb$Date, data_feb$Time),"dmY hms"))
+with(a, plot(t, as.numeric(Global_active_power)/1000, 
+             xlab = "", ylab = "Global Active Power(kilowatts)", pch = 1, lwd=2, type = "l")) 
+
+# plot 2: top right
+with(a, plot(t, as.numeric(Voltage),  type = "l", 
+             xlab="datetime", ylab="Voltage"))
+
+# plot 3: left bottom
+a <- mutate(data_feb, t = parse_date_time(paste(data_feb$Date, data_feb$Time),"dmY hms"))
+b <- select(a, t, as.numeric(Sub_metering_1), as.numeric(Sub_metering_2), as.numeric(Sub_metering_3))
+
+with(b, plot(t, as.numeric(Sub_metering_1),  type = "l", 
+             xlab="", ylab="Energy sub metering"))
+with(b, lines(t, as.numeric(Sub_metering_2), type = "l", col = "blue"))
+with(b, lines(t, as.numeric(Sub_metering_3), type = "l", col = "red"))
+legend("topright", lty = c(1,1,1), col = c("black", "blue", "red"), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
+
+
+
+# plot 4: top bottom
+with(a, plot(t, as.numeric(Global_reactive_power),  type = "l", 
+             xlab="datetime", ylab="Global_reactive_power"))
+
+
+dev.off()

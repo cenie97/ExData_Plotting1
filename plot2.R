@@ -13,7 +13,7 @@ newdata <- tbl_df(data)
 data_feb <- filter(newdata, dmy(Date) == ymd("2007-02-01") | dmy(Date) == ymd("2007-02-02"))
 
 
-## create a histogram plot and save it to plot1.png file
+## create a plot and save it to plot2.png file
 png(filename = "plot2.png")
 a <- mutate(data_feb, t = parse_date_time(paste(data_feb$Date, data_feb$Time),"dmY hms"))
 with(a, plot(t, as.numeric(Global_active_power)/1000, 
